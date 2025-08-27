@@ -1,27 +1,27 @@
+require("dotenv").config();
 import mongoose = require("mongoose");
+const uri = process.env.MONGODB_URI as string;
 
-let isReady = false;
+const branchschema = new mongoose.Schema({
+  data: {
+    id: String,
+    brandName: String,
+    branchName: String,
+    address: String,
+    location: {
+      coordinates: [Number, Number],
+      type: String,
+    },
+  },
+});
+
+branchschema.path("id");
+
+const branches = mongoose.model("branches", branchschema);
 
 async function connectMongoose() {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) throw new Error("MONGODB_URI가 .env에 없습니다.");
-
-  if (!isReady) {
-    await mongoose.connect(uri); // URI에 DB 포함 가정
-    isReady = true;
-
-    mongoose.connection.on("error", (e: unknown) => {
-      // 로그 시 안전하게 처리
-      if (e instanceof Error) {
-        console.error("[mongoose]", e.message, e.stack);
-      } else {
-        console.error("[mongoose]", e);
-      }
-    });
-
-    console.log("✅ Mongoose connected");
-  }
-  return mongoose.connection;
+  await mongoose.connect(uri);
+  console.log("connected to mongodb");
 }
 
-module.exports = { connectMongoose };
+module.exports = { connectMongoose, branches };
