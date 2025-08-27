@@ -25,4 +25,10 @@ const FranchiseSchema = new Schema(
 FranchiseSchema.index({ location: "2dsphere" });
 
 export type FranchiseDoc = mongoose.InferSchemaType<typeof FranchiseSchema>;
+export type FranchiseModel = typeof FranchiseSchema;
+
+console.log(FranchiseSchema);
+console.log(typeof FranchiseSchema);
+console.log(FranchiseSchema.index);
+
 module.exports = mongoose.model("Franchise", FranchiseSchema);
