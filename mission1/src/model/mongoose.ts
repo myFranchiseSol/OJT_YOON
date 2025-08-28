@@ -1,8 +1,5 @@
-require("dotenv").config();
 import mongoose = require("mongoose");
-const uri = process.env.MONGODB_URI as string;
-
-//크롤링 데이터 몽구스 스키마 정의
+//odm을 위한 몽구스 스키마 정의
 const branchschema = new mongoose.Schema({
   data: {
     id: String,
@@ -15,15 +12,10 @@ const branchschema = new mongoose.Schema({
     },
   },
 });
-
+//id 필드 인덱스 생성
 branchschema.path("id");
 
-const sulbing = mongoose.model("sulbing", branchschema);
-const misoya = mongoose.model("misoya", branchschema);
+//몽구스 모델 생성하여 odm 사용 가능하게 함
+const branches = mongoose.model("branches", branchschema);
 
-async function connectMongoose() {
-  await mongoose.connect(uri);
-  console.log("connected to mongodb");
-}
-
-module.exports = { sulbing, misoya };
+module.exports = { branches };
